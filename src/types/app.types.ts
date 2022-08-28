@@ -3,12 +3,15 @@ export interface PanicStatus {
   name: "In progress" | "Cancelled" | "Resolved";
 }
 
-export interface Panic {
-  id: number;
+export interface NewPanic {
   longitude: string;
   latitude: string;
   panic_type: string;
   details: string;
+}
+
+export interface Panic extends NewPanic {
+  id: number;
   created_at: string;
   status: PanicStatus;
 }

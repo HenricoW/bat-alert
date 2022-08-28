@@ -12,6 +12,10 @@ export const initialPanicValues = {
   longitude: 28.0559616,
 };
 
+interface RaisePanicFormProps {
+  onNewPanic: (values: typeof initialPanicValues) => void;
+}
+
 const formField = (fieldName: string, label: string, errors: FormikErrors<any>, touched: FormikTouched<any>) => (
   <Field
     name={fieldName}
@@ -25,7 +29,7 @@ const formField = (fieldName: string, label: string, errors: FormikErrors<any>, 
   ></Field>
 );
 
-const RaisePanicForm = () => {
+const RaisePanicForm = ({ onNewPanic }: RaisePanicFormProps) => {
   return (
     <Box minWidth="350px" maxWidth="400px" border="1px solid #888" p="1em" borderRadius="10px">
       <Typography textAlign="center" variant="h5" mb=".5em">
@@ -35,6 +39,7 @@ const RaisePanicForm = () => {
         initialValues={initialPanicValues}
         onSubmit={async (values, formikHelpers) => {
           formikHelpers.resetForm();
+          onNewPanic(values);
         }}
         validationSchema={object({
           panicType: string().required("Panic type required"),

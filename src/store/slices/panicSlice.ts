@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Panic } from "../../types/app.types";
+import { NewPanic, Panic } from "../../types/app.types";
 
 const initialState = {
   panics: [] as Panic[],
@@ -28,8 +28,11 @@ const panicSlice = createSlice({
       let thePanic = state.panics.find((panic) => panic.id === action.payload);
       if (thePanic) state.currentPanic = thePanic;
     },
-    addPanic: (state, action: PayloadAction<Panic>) => {
-      state.panics = [...state.panics, action.payload];
+    addPanic: (state, action: PayloadAction<NewPanic>) => {
+      state.panics = [
+        ...state.panics,
+        { ...action.payload, id: 0, created_at: new Date().toISOString(), status: { id: 1, name: "In progress" } },
+      ];
     },
     updatePanic: (state, action: PayloadAction<Panic>) => {
       let foundPanic = state.panics.find((panic) => panic.id === action.payload.id);
