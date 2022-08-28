@@ -3,7 +3,7 @@ import { Alert, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import LoginForm from "../../components/Forms/LoginForm";
-import { loginRequest } from "../../core/api.service";
+import { loginRequest } from "../../core/user.service";
 import { ApiResponse } from "../../types/api.types";
 
 const LoginPage = () => {
