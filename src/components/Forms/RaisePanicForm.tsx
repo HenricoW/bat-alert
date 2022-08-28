@@ -8,8 +8,8 @@ import type { FormikErrors, FormikTouched } from "formik";
 const initialValues = {
   panicType: "",
   description: "",
-  latitude: 0,
-  longitude: 0,
+  latitude: -26.099712,
+  longitude: 28.0559616,
 };
 
 const formField = (fieldName: string, label: string, errors: FormikErrors<any>, touched: FormikTouched<any>) => (
@@ -41,14 +41,14 @@ const RaisePanicForm = () => {
           description: string(),
           latitude: number()
             .required("Latitude required")
+            .typeError("Must be a number")
             .min(-90, "Outside valid range")
-            .max(90, "Outside valid range")
-            .default(-26.099712),
+            .max(90, "Outside valid range"),
           longitude: number()
             .required("Longitude required")
+            .typeError("Must be a number")
             .min(-90, "Outside valid range")
-            .max(90, "Outside valid range")
-            .default(28.0559616),
+            .max(90, "Outside valid range"),
         })}
       >
         {({ errors, isValid, dirty, touched }) => (
