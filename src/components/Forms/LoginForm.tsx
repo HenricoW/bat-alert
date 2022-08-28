@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { Box, Stack, TextField, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { Formik, Form, Field } from "formik";
 import { object, string } from "yup";
 
@@ -8,7 +9,12 @@ const initialValues = {
   password: "",
 };
 
-const LoginForm = () => {
+interface LoginFormProps {
+  onLogIn: (email: string, password: string) => void;
+  isPending: boolean;
+}
+
+const LoginForm = ({ onLogIn, isPending }: LoginFormProps) => {
   return (
     <Box maxWidth="300px">
       <Typography textAlign="center" variant="h5" mb=".5em">
@@ -16,9 +22,9 @@ const LoginForm = () => {
       </Typography>
       <Formik
         initialValues={initialValues}
-        onSubmit={(values, formikHelpers) => {
-          console.log(values);
+        onSubmit={async (values, formikHelpers) => {
           formikHelpers.resetForm();
+          onLogIn(values.email, values.password);
         }}
         validationSchema={object({
           email: string().required("E-mail required").email("Invalid e-mail"),
@@ -46,9 +52,9 @@ const LoginForm = () => {
                 error={errors.password && touched.password}
                 helperText={errors.password || ""}
               ></Field>
-              <Button variant="contained" type="submit" disabled={!dirty || !isValid}>
+              <LoadingButton variant="contained" type="submit" disabled={!dirty || !isValid} loading={isPending}>
                 Sign In
-              </Button>
+              </LoadingButton>
             </Stack>
           </Form>
         )}
