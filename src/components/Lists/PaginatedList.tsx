@@ -1,8 +1,6 @@
 import * as React from "react";
 
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,57 +10,19 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 
-import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
+import TablePaginationActions from "./TablePaginationActions";
+import { useAppSelector } from "../../hooks/storeHooks";
 
-import type { Panic } from "../../types/app.types";
-
-interface TablePaginationActionsProps {
-  count: number;
-  page: number;
-  rowsPerPage: number;
-  onPageChange: (event: React.MouseEvent<HTMLButtonElement>, newPage: number) => void;
-}
-
-interface PaginatedListProps {
-  panicList: Panic[];
-}
-
-const TablePaginationActions = (props: TablePaginationActionsProps) => {
-  const { count, page, rowsPerPage, onPageChange } = props;
-
-  return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-      <IconButton onClick={(e) => onPageChange(e, 0)} disabled={page === 0} aria-label="first page">
-        <FirstPageIcon />
-      </IconButton>
-      <IconButton onClick={(e) => onPageChange(e, page - 1)} disabled={page === 0} aria-label="previous page">
-        <KeyboardArrowLeft />
-      </IconButton>
-      <IconButton onClick={(e) => onPageChange(e, page + 1)} disabled={page >= Math.ceil(count / rowsPerPage) - 1}>
-        <KeyboardArrowRight />
-      </IconButton>
-      <IconButton
-        onClick={(e) => onPageChange(e, Math.max(0, Math.ceil(count / rowsPerPage) - 1))}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-      >
-        <LastPageIcon />
-      </IconButton>
-    </Box>
-  );
-};
-
-const PaginatedList = ({ panicList }: PaginatedListProps) => {
+const PaginatedList = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const panicList = useAppSelector((state) => state.panics.panics);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - panicList.length) : 0;
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+  const handleChangePage = (_: any, newPage: number) => {
     setPage(newPage);
   };
 

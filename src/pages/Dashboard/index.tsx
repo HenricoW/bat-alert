@@ -4,18 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 
 import { getPanics } from "../../core/panics.service";
-import { useAppSelector } from "../../hooks/storeHooks";
-import { ApiResponse } from "../../types/api.types";
-import { Panic } from "../../types/app.types";
+import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import PaginatedList from "../../components/Lists/PaginatedList";
+import { panicActions } from "../../store/slices/panicSlice";
+import type { ApiResponse } from "../../types/api.types";
 
 const Dashboard = () => {
   const [panicsMessage, setPanicsMessage] = useState("");
   const [responseStatus, setResponseStatus] = useState<ApiResponse["status"]>("success");
   const [isPending, setIsPending] = useState(false);
-  const [panicList, setPanicList] = useState<Panic[]>([]);
 
   const userToken = useAppSelector((state) => state.user.token_id);
+  const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ const Dashboard = () => {
     setIsPending(true);
     setResponseStatus("success");
     setPanicsMessage("");
-    setPanicList([]);
+    dispatch(panicActions.setPanics([]));
 
     getPanics()
       .then((response) => {
@@ -31,7 +31,7 @@ const Dashboard = () => {
           setResponseStatus("error");
           setPanicsMessage("Could not fetch panics");
         } else {
-          setPanicList(response.data.panics);
+          dispatch(panicActions.setPanics(response.data.panics));
         }
       })
       .catch((error) => {
@@ -54,7 +54,7 @@ const Dashboard = () => {
       <LoadingButton variant="contained" onClick={onGetPanics} loading={isPending} sx={{ my: "2em" }}>
         Get panics
       </LoadingButton>
-      <PaginatedList panicList={panicList} />
+      <PaginatedList />
     </Box>
   );
 };
