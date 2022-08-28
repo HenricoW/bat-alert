@@ -3,6 +3,7 @@ import { Box, Stack, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Formik, Form, Field } from "formik";
 import { number, object, string } from "yup";
+import type { FormikErrors, FormikTouched } from "formik";
 
 const initialValues = {
   panicType: "",
@@ -10,6 +11,19 @@ const initialValues = {
   latitude: 0,
   longitude: 0,
 };
+
+const formField = (fieldName: string, label: string, errors: FormikErrors<any>, touched: FormikTouched<any>) => (
+  <Field
+    name={fieldName}
+    label={label}
+    as={TextField}
+    multiline={fieldName === "description"}
+    variant="outlined"
+    size="small"
+    error={!!errors[fieldName] && !!touched[fieldName]}
+    helperText={errors[fieldName] || ""}
+  ></Field>
+);
 
 const RaisePanicForm = () => {
   return (
@@ -40,46 +54,10 @@ const RaisePanicForm = () => {
         {({ errors, isValid, dirty, touched }) => (
           <Form>
             <Stack spacing={2}>
-              <Field
-                name="panicType"
-                label="Panic type"
-                as={TextField}
-                variant="outlined"
-                size="small"
-                error={!!errors.panicType && !!touched.panicType}
-                helperText={errors.panicType || ""}
-              ></Field>
-              <Field
-                name="description"
-                label="Description"
-                as={TextField}
-                multiline={true}
-                maxRows={2}
-                variant="outlined"
-                size="small"
-                error={!!errors.description && !!touched.description}
-                helperText={errors.description || ""}
-              ></Field>
-              <Field
-                name="latitude"
-                type="text"
-                label="Latitude"
-                as={TextField}
-                variant="outlined"
-                size="small"
-                error={!!errors.latitude && !!touched.latitude}
-                helperText={errors.latitude || ""}
-              ></Field>
-              <Field
-                name="longitude"
-                type="text"
-                label="Longitude"
-                as={TextField}
-                variant="outlined"
-                size="small"
-                error={!!errors.longitude && !!touched.longitude}
-                helperText={errors.longitude || ""}
-              ></Field>
+              {formField("panicType", "Panic type", errors, touched)}
+              {formField("description", "Description", errors, touched)}
+              {formField("latitude", "Latitude", errors, touched)}
+              {formField("longitude", "Longitude", errors, touched)}
               <LoadingButton variant="contained" type="submit" disabled={!dirty || !isValid} color="error">
                 Raise Panic
               </LoadingButton>

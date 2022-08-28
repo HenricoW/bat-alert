@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Box } from "@mui/material";
+import { Alert, Backdrop, Box, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 
@@ -57,6 +57,9 @@ const Dashboard = () => {
         Get panics
       </LoadingButton>
       <PaginatedList />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isPending}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Box>
   );
 };
