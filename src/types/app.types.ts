@@ -6,7 +6,7 @@ export interface PanicStatus {
 export interface Panic {
   id: number;
   longitude: string;
-  latitiude: string;
+  latitude: string;
   panic_type: string;
   details: string;
   created_at: string;

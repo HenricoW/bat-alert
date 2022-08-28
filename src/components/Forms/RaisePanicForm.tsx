@@ -5,9 +5,9 @@ import { Formik, Form, Field } from "formik";
 import { number, object, string } from "yup";
 import type { FormikErrors, FormikTouched } from "formik";
 
-const initialValues = {
+export const initialPanicValues = {
   panicType: "",
-  description: "",
+  details: "",
   latitude: -26.099712,
   longitude: 28.0559616,
 };
@@ -17,7 +17,7 @@ const formField = (fieldName: string, label: string, errors: FormikErrors<any>, 
     name={fieldName}
     label={label}
     as={TextField}
-    multiline={fieldName === "description"}
+    multiline={fieldName === "details"}
     variant="outlined"
     size="small"
     error={!!errors[fieldName] && !!touched[fieldName]}
@@ -32,13 +32,13 @@ const RaisePanicForm = () => {
         Raise a New Panic
       </Typography>
       <Formik
-        initialValues={initialValues}
+        initialValues={initialPanicValues}
         onSubmit={async (values, formikHelpers) => {
           formikHelpers.resetForm();
         }}
         validationSchema={object({
           panicType: string().required("Panic type required"),
-          description: string(),
+          details: string(),
           latitude: number()
             .required("Latitude required")
             .typeError("Must be a number")
@@ -55,7 +55,7 @@ const RaisePanicForm = () => {
           <Form>
             <Stack spacing={2}>
               {formField("panicType", "Panic type", errors, touched)}
-              {formField("description", "Description", errors, touched)}
+              {formField("details", "Details", errors, touched)}
               {formField("latitude", "Latitude", errors, touched)}
               {formField("longitude", "Longitude", errors, touched)}
               <LoadingButton variant="contained" type="submit" disabled={!dirty || !isValid} color="error">

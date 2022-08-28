@@ -6,7 +6,7 @@ const initialState = {
   currentPanic: {
     id: 0,
     longitude: "",
-    latitiude: "",
+    latitude: "",
     panic_type: "",
     details: "",
     created_at: "",
