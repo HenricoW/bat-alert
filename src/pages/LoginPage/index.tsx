@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Alert, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import LoginForm from "../../components/Forms/LoginForm";
 import { loginRequest } from "../../core/api.service";
@@ -10,6 +11,8 @@ const LoginPage = () => {
   const [loginStatus, setLoginStatus] = useState<ApiResponse["status"]>("success");
   const [isPending, setIsPending] = useState(false);
 
+  const navigate = useNavigate();
+
   const onLogIn = (email: string, password: string) => {
     setIsPending(true);
     setLoginMessage("");
@@ -18,6 +21,7 @@ const LoginPage = () => {
       .then(({ status, message }) => {
         setLoginStatus(status);
         setLoginMessage(message);
+        if (status === "success") navigate("/dashboard");
       })
       .catch((error) => {
         setLoginStatus("error");
