@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import PaginatedList from "../../components/Lists/PaginatedList";
 import { panicActions } from "../../store/slices/panicSlice";
 import type { ApiResponse } from "../../types/api.types";
+import RaisePanicForm from "../../components/Forms/RaisePanicForm";
 
 const Dashboard = () => {
   const [panicsMessage, setPanicsMessage] = useState("");
@@ -50,6 +51,7 @@ const Dashboard = () => {
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" mt="3em">
+      <RaisePanicForm />
       {panicsMessage && <Alert severity={responseStatus}>{panicsMessage}</Alert>}
       <LoadingButton variant="contained" onClick={onGetPanics} loading={isPending} sx={{ my: "2em" }}>
         Get panics
