@@ -10,7 +10,7 @@ export interface Panic {
   panic_type: string;
   details: string;
   created_at: string;
-  status: PanicStatus["name"];
+  status: PanicStatus;
 }
 
 export interface User {

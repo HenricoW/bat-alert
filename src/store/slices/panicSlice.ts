@@ -10,7 +10,10 @@ const initialState = {
     panic_type: "",
     details: "",
     created_at: "",
-    status: "Cancelled",
+    status: {
+      id: 2,
+      name: "Cancelled",
+    },
   } as Panic,
 };
 
