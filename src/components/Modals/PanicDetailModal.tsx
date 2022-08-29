@@ -6,6 +6,7 @@ interface PanicDetailModalProps {
   currentPanic: Panic;
   showModal: boolean;
   setShowModal: (value: React.SetStateAction<boolean>) => void;
+  onCancelPanic: (panicId: number) => void;
 }
 
 const style = {
@@ -20,7 +21,12 @@ const style = {
   p: 4,
 };
 
-const PanicDetailModal = ({ currentPanic, setShowModal, showModal }: PanicDetailModalProps) => {
+const PanicDetailModal = ({ currentPanic, setShowModal, showModal, onCancelPanic }: PanicDetailModalProps) => {
+  const handleCancelPanic = () => {
+    onCancelPanic(currentPanic.id);
+    setShowModal(false);
+  };
+
   return (
     <Modal open={showModal} onClose={() => setShowModal(false)}>
       <Box id="panicDetail" sx={style}>
@@ -33,11 +39,24 @@ const PanicDetailModal = ({ currentPanic, setShowModal, showModal }: PanicDetail
             <Typography>When: {new Date(currentPanic.created_at).toLocaleString("en-GB")}</Typography>
             <Typography>Where: {`${currentPanic.latitude}, ${currentPanic.longitude}`}</Typography>
             <Typography>Type: {currentPanic.panic_type}</Typography>
-            <Typography>Status: {currentPanic.status.name}</Typography>
+            <Typography id="panicStatus">Status: {currentPanic.status.name}</Typography>
           </>
         ) : (
           <Typography>Nothing to see</Typography>
         )}
+
+        {currentPanic.status.name === "In Progress" && (
+          <Button
+            variant="outlined"
+            id="cancelPanic"
+            color="warning"
+            sx={{ display: "block", m: "1em auto 0" }}
+            onClick={handleCancelPanic}
+          >
+            Cancel Panic
+          </Button>
+        )}
+
         <Button
           variant="outlined"
           id="closeDetail"

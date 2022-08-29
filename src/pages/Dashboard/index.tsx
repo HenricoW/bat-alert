@@ -3,7 +3,7 @@ import { Alert, Backdrop, Box, CircularProgress, Snackbar } from "@mui/material"
 import { useNavigate } from "react-router-dom";
 
 import { PanicStatus } from "../../types/app.types";
-import { getPanics, raisePanic, reversePanics } from "../../core/panics.service";
+import { cancelPanic, getPanics, raisePanic, reversePanics } from "../../core/panics.service";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { panicActions } from "../../store/slices/panicSlice";
 import type { ApiResponse } from "../../types/api.types";
@@ -90,6 +90,32 @@ const Dashboard = () => {
       });
   };
 
+  const onCancelPanic = (panicId: number) => {
+    setIsPending(true);
+    setResponseStatus("success");
+    setPanicsMessage("");
+
+    cancelPanic(panicId)
+      .then((response) => {
+        if (!response.status || response.status === "error") {
+          setResponseStatus("error");
+          setPanicsMessage("Could not cancel panic");
+        } else {
+          setSnackOpen(true);
+          setPanicsMessage(response.message);
+          onGetPanics();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setResponseStatus("error");
+        setPanicsMessage(error.message);
+      })
+      .finally(() => {
+        setIsPending(false);
+      });
+  };
+
   useEffect(() => {
     if (!userToken) navigate("/");
   }, [userToken]);
@@ -118,7 +144,12 @@ const Dashboard = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      <PanicDetailModal currentPanic={currentPanic} setShowModal={setShowModal} showModal={showModal} />
+      <PanicDetailModal
+        currentPanic={currentPanic}
+        setShowModal={setShowModal}
+        showModal={showModal}
+        onCancelPanic={onCancelPanic}
+      />
     </Box>
   );
 };

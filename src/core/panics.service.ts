@@ -36,7 +36,6 @@ export const getPanics = async (status_id?: PanicStatus) => {
 
 export const raisePanic = async (values: NewPanic) => {
   const userToken = getUserToken();
-  console.log(values);
 
   try {
     const resp = await fetch(baseURL + "panic/send", {
@@ -57,3 +56,24 @@ export const raisePanic = async (values: NewPanic) => {
 };
 
 export const reversePanics = (panicList: Panic[]) => [...panicList].reverse();
+
+export const cancelPanic = async (panicId: number) => {
+  const userToken = getUserToken();
+
+  try {
+    const resp = await fetch(baseURL + "panic/cancel", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userToken}`,
+      },
+      body: JSON.stringify({ panic_id: panicId }),
+    });
+
+    return (await resp.json()) as ApiResponse;
+  } catch (error: any) {
+    console.log("Error raising panic:", error);
+    throw Error(error.message.includes("Failed to fetch") ? "You may be offline" : "Error raising panic");
+  }
+};
