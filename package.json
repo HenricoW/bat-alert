@@ -9,13 +9,6 @@
     "@mui/lab": "^5.0.0-alpha.96",
     "@mui/material": "^5.10.2",
     "@reduxjs/toolkit": "^1.8.5",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
     "dotenv-safe": "^8.2.0",
     "formik": "^2.2.9",
     "puppeteer": "^16.2.0",
@@ -51,5 +44,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/dotenv-safe": "^8.1.2"
   }
 }
