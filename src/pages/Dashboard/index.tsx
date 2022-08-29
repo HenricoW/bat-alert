@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Backdrop, Box, CircularProgress, Snackbar } from "@mui/material";
+import { Alert, Backdrop, Box, Button, CircularProgress, Modal, Snackbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 
@@ -10,13 +10,27 @@ import { panicActions } from "../../store/slices/panicSlice";
 import type { ApiResponse } from "../../types/api.types";
 import RaisePanicForm, { initialPanicValues } from "../../components/Forms/RaisePanicForm";
 
+const style = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #ccc",
+  borderRadius: "10px",
+  p: 4,
+};
+
 const Dashboard = () => {
   const [panicsMessage, setPanicsMessage] = useState("");
   const [responseStatus, setResponseStatus] = useState<ApiResponse["status"]>("success");
   const [isPending, setIsPending] = useState(false);
   const [snackOpen, setSnackOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const userToken = useAppSelector((state) => state.user.token_id);
+  const currentPanic = useAppSelector((state) => state.panics.currentPanic);
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -93,7 +107,7 @@ const Dashboard = () => {
         Refresh panic list
       </LoadingButton>
 
-      <PaginatedList />
+      <PaginatedList setShowModal={setShowModal} />
 
       <Snackbar open={snackOpen} autoHideDuration={6000} onClose={() => setSnackOpen(false)}>
         <Alert onClose={() => setSnackOpen(false)} severity="success" sx={{ width: "100%" }}>
@@ -103,6 +117,32 @@ const Dashboard = () => {
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isPending}>
         <CircularProgress color="inherit" />
       </Backdrop>
+      <Modal open={showModal} onClose={() => setShowModal(false)}>
+        <Box id="panicDetail" sx={style}>
+          {currentPanic.details ? (
+            <>
+              <Typography variant="h6">Panic Detail</Typography>
+              <Typography id="panicTitle" variant="h5" m=".5em 0 1em">
+                {currentPanic.details}
+              </Typography>
+              <Typography>When: {new Date(currentPanic.created_at).toLocaleString("en-GB")}</Typography>
+              <Typography>Where: {`${currentPanic.latitude}, ${currentPanic.longitude}`}</Typography>
+              <Typography>Type: {currentPanic.panic_type}</Typography>
+              <Typography>Status: {currentPanic.status.name}</Typography>
+            </>
+          ) : (
+            <Typography>Nothing to see</Typography>
+          )}
+          <Button
+            variant="outlined"
+            id="closeDetail"
+            sx={{ display: "block", m: "1em auto 0" }}
+            onClick={() => setShowModal(false)}
+          >
+            Close
+          </Button>
+        </Box>
+      </Modal>
     </Box>
   );
 };

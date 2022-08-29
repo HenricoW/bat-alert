@@ -25,6 +25,8 @@ describe("Dashboard page", () => {
   });
 
   describe("Panic detail view", () => {
+    jest.setTimeout(10_000);
+
     it("Should sign in", async () => {
       expect(await page.$eval("button[type=submit]", (btn) => btn.textContent)).toEqual("Sign In");
       expect(await page.$eval("button[type=submit]", (btn) => btn.disabled)).toBe(false);
@@ -42,14 +44,16 @@ describe("Dashboard page", () => {
       console.log(panicText);
     });
 
-    xit("Shows modal when clicking on title in panic list", async () => {
+    it("Shows modal when clicking on title in panic list", async () => {
+      await page.waitForTimeout(500);
       await page.click("tbody tr td");
-      await page.waitForSelector("#panicDetail");
+      await page.waitForSelector("h5#panicTitle");
+      // await page.screenshot({ path: "capture.png" });
 
       expect(await page.$eval("#panicTitle", (el) => el.textContent)).toEqual(panicText);
     });
 
-    xit("Closes panic modal", async () => {
+    it("Closes panic modal", async () => {
       expect(await page.$eval("#closeDetail", (el) => el.textContent)).toEqual("Close");
       await page.click("#closeDetail");
 

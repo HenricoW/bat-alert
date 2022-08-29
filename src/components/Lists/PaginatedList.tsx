@@ -11,13 +11,19 @@ import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 
 import TablePaginationActions from "./TablePaginationActions";
-import { useAppSelector } from "../../hooks/storeHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
+import { panicActions } from "../../store/slices/panicSlice";
 
-const PaginatedList = () => {
+interface PaginatedListProps {
+  setShowModal: (value: React.SetStateAction<boolean>) => void;
+}
+
+const PaginatedList = ({ setShowModal }: PaginatedListProps) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const panicList = useAppSelector((state) => state.panics.panics);
+  const dispatch = useAppDispatch();
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - panicList.length) : 0;
@@ -29,6 +35,11 @@ const PaginatedList = () => {
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleTitleClick = (panicId: number) => {
+    dispatch(panicActions.setCurrentPanic(panicId));
+    setShowModal(true);
   };
 
   return (
@@ -45,7 +56,9 @@ const PaginatedList = () => {
           {(rowsPerPage > 0 ? panicList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : panicList).map(
             (row) => (
               <TableRow key={row.details}>
-                <TableCell>{row.details}</TableCell>
+                <TableCell onClick={() => handleTitleClick(row.id)} sx={{ ":hover": { cursor: "pointer" } }}>
+                  {row.details}
+                </TableCell>
                 <TableCell style={{ width: 80 }} align="right">
                   {row.status.name}
                 </TableCell>
