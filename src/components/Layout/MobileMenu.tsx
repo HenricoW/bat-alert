@@ -1,8 +1,10 @@
 import React from "react";
 
-import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemText, Typography } from "@mui/material";
+import { Box, Button, Divider, Drawer, Stack, Typography } from "@mui/material";
 
-import { appName, drawerWidth, navList } from "../../config";
+import { appName, drawerWidth } from "../../config";
+import { logUserOut } from "../../core/user.service";
+import { useAppSelector } from "../../hooks/storeHooks";
 
 interface MobileMenuProps {
   menuOpen: boolean;
@@ -10,6 +12,8 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ menuOpen, toggleMobileMenu }: MobileMenuProps) => {
+  const userToken = useAppSelector((state) => state.user.token_id);
+
   return (
     <Box component="nav">
       <Drawer
@@ -29,15 +33,16 @@ const MobileMenu = ({ menuOpen, toggleMobileMenu }: MobileMenuProps) => {
             {appName}
           </Typography>
           <Divider />
-          <List>
-            {navList.map((item) => (
-              <ListItem key={item} disablePadding>
-                <ListItemButton sx={{ textAlign: "center" }}>
-                  <ListItemText primary={item} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+
+          <Stack p="2em 1em">
+            {userToken && (
+              <>
+                <Button variant="contained" color="warning" onClick={logUserOut}>
+                  Logout
+                </Button>
+              </>
+            )}
+          </Stack>
         </Box>
       </Drawer>
     </Box>
