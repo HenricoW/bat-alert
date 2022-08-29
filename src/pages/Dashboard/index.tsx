@@ -134,8 +134,8 @@ const Dashboard = () => {
             onChange={(e) => setHistoryType(e.target.value as HistorySelectType)}
           >
             <MenuItem value={"All"}>All</MenuItem>
-            <MenuItem value={"In progress"}>In progress</MenuItem>
-            <MenuItem value={"Cancelled"}>Cancelled</MenuItem>
+            <MenuItem value={"In Progress"}>In Progress</MenuItem>
+            <MenuItem value={"Canceled"}>Cancelled</MenuItem>
             <MenuItem value={"Resolved"}>Resolved</MenuItem>
           </Select>
         </FormControl>

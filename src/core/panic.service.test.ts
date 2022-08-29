@@ -24,7 +24,7 @@ describe("Panic service", () => {
     });
 
     it("Should return only In progress panics", async () => {
-      const response = await getPanics(PanicStatus["In progress"]);
+      const response = await getPanics(PanicStatus["In Progress"]);
       const data = response.data;
       expect(data).toBeDefined();
       expect(data.panics).toBeDefined();
@@ -39,7 +39,7 @@ describe("Panic service", () => {
     });
 
     it("Should return only Cancelled panics", async () => {
-      const response = await getPanics(PanicStatus["Cancelled"]);
+      const response = await getPanics(PanicStatus["Canceled"]);
       const data = response.data;
       expect(data).toBeDefined();
       expect(data.panics).toBeDefined();

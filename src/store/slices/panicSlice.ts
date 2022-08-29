@@ -12,7 +12,7 @@ const initialState = {
     created_at: "",
     status: {
       id: 2,
-      name: "Cancelled",
+      name: "Canceled",
     },
   } as Panic,
 };
@@ -31,7 +31,7 @@ const panicSlice = createSlice({
     addPanic: (state, action: PayloadAction<NewPanic>) => {
       state.panics = [
         ...state.panics,
-        { ...action.payload, id: 0, created_at: new Date().toISOString(), status: { id: 1, name: "In progress" } },
+        { ...action.payload, id: 0, created_at: new Date().toISOString(), status: { id: 1, name: "In Progress" } },
       ];
     },
     updatePanic: (state, action: PayloadAction<Panic>) => {

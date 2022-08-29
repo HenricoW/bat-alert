@@ -1,11 +1,11 @@
 export interface PanicStatusField {
   id: 1 | 2 | 3;
-  name: "In progress" | "Cancelled" | "Resolved";
+  name: "In Progress" | "Canceled" | "Resolved";
 }
 
 export enum PanicStatus {
-  "In progress" = 1,
-  "Cancelled",
+  "In Progress" = 1,
+  "Canceled",
   "Resolved",
 }
 
