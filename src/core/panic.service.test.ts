@@ -2,8 +2,8 @@ import dotenv from "dotenv-safe";
 
 import { userActions } from "../store/slices/userSlice";
 import store from "../store/store";
-import { getPanics } from "./panics.service";
-import { PanicStatus } from "../types/app.types";
+import { cancelPanic, getPanics } from "./panics.service";
+import { Panic, PanicStatus } from "../types/app.types";
 
 dotenv.config();
 
@@ -63,5 +63,27 @@ describe("Panic service", () => {
       expect(Array.isArray(thePanics)).toBe(true);
       expect(thePanics.length).toEqual(0);
     });
+  });
+
+  describe("Cancel panic", () => {
+    it("Should cancel a panic by id", async () => {
+      const response = await getPanics();
+      const panicList = response.data.panics as Panic[];
+
+      // get 1st 'in progress' panic's id
+      const thePanic = panicList.find((panic) => panic.status.name === "In Progress");
+
+      const response2 = await cancelPanic(thePanic?.id || 0);
+      expect(response2.status).toBe("success");
+
+      const response3 = await getPanics();
+      const panicList2 = response3.data.panics as Panic[];
+
+      // check that panic's status was updated
+      const thePanic2 = panicList2.find((panic) => panic.id === thePanic?.id);
+      expect(thePanic2?.status.name).toBe("Canceled");
+    });
+
+    it.todo("Should leave already cancelled panics unchanged");
   });
 });

@@ -6,7 +6,7 @@ dotenv.config();
 const email = process.env.EMAIL || "";
 const password = process.env.PASSWORD || "";
 
-describe("Dashboard page", () => {
+xdescribe("Dashboard page", () => {
   let browser, page;
   beforeAll(async () => {
     browser = await puppeteer.launch();
@@ -41,7 +41,6 @@ describe("Dashboard page", () => {
       await page.click("button#panicHistory");
       await page.waitForSelector("tbody tr");
       panicText = await page.$eval("tbody tr td", (cell) => cell.textContent);
-      console.log(panicText);
     });
 
     it("Shows modal when clicking on title in panic list", async () => {
@@ -59,5 +58,9 @@ describe("Dashboard page", () => {
 
       expect(await page.$("#panicDetail")).toBe(null);
     });
+
+    it.todo("Should show a 'Cancel Panic' button on 'in progress' panics");
+    it.todo("Should NOT show a 'Cancel Panic' button on cancelled panics");
+    it.todo("Should cancel a panic when clicking 'Cancel Panic'");
   });
 });
