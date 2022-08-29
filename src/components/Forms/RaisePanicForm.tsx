@@ -42,7 +42,7 @@ const RaisePanicForm = ({ onNewPanic }: RaisePanicFormProps) => {
           onNewPanic(values);
         }}
         validationSchema={object({
-          panicType: string().required("Panic type required"),
+          panicType: string(), //.required("Panic type required"),
           details: string(),
           latitude: number()
             .required("Latitude required")

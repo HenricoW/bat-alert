@@ -37,6 +37,7 @@ const LoginForm = ({ onLogIn, isPending }: LoginFormProps) => {
               <Field
                 name="email"
                 type="email"
+                label="E-mail"
                 as={TextField}
                 variant="outlined"
                 size="small"
@@ -46,6 +47,7 @@ const LoginForm = ({ onLogIn, isPending }: LoginFormProps) => {
               <Field
                 name="password"
                 type="password"
+                label="Password"
                 as={TextField}
                 variant="outlined"
                 size="small"
