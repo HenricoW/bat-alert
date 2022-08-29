@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Backdrop, Box, Button, CircularProgress, Modal, Snackbar, Typography } from "@mui/material";
+import {
+  Alert,
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 
@@ -9,6 +22,7 @@ import PaginatedList from "../../components/Lists/PaginatedList";
 import { panicActions } from "../../store/slices/panicSlice";
 import type { ApiResponse } from "../../types/api.types";
 import RaisePanicForm, { initialPanicValues } from "../../components/Forms/RaisePanicForm";
+import { PanicStatus, PanicStatusField } from "../../types/app.types";
 
 const style = {
   position: "absolute" as "absolute",
@@ -22,12 +36,15 @@ const style = {
   p: 4,
 };
 
+type HistorySelectType = "All" | PanicStatusField["name"];
+
 const Dashboard = () => {
   const [panicsMessage, setPanicsMessage] = useState("");
   const [responseStatus, setResponseStatus] = useState<ApiResponse["status"]>("success");
   const [isPending, setIsPending] = useState(false);
   const [snackOpen, setSnackOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [historyType, setHistoryType] = useState<HistorySelectType>("All");
 
   const userToken = useAppSelector((state) => state.user.token_id);
   const currentPanic = useAppSelector((state) => state.panics.currentPanic);
@@ -41,7 +58,7 @@ const Dashboard = () => {
     setPanicsMessage("");
     dispatch(panicActions.setPanics([]));
 
-    getPanics()
+    getPanics(historyType === "All" ? undefined : PanicStatus[historyType])
       .then((response) => {
         if (!response.status || response.status === "error") {
           setResponseStatus("error");
@@ -103,9 +120,35 @@ const Dashboard = () => {
       <RaisePanicForm onNewPanic={onNewPanic} />
 
       {panicsMessage && <Alert severity={responseStatus}>{panicsMessage}</Alert>}
-      <LoadingButton variant="contained" onClick={onGetPanics} id="panicHistory" loading={isPending} sx={{ mt: "4em" }}>
-        Refresh panic list
-      </LoadingButton>
+
+      <Box display="flex" gap="1em" mt="4em">
+        <FormControl>
+          <InputLabel id="history-type-select-label">Panic Type</InputLabel>
+          <Select
+            labelId="history-type-select-label"
+            id="history-type-select"
+            value={historyType}
+            label="Panic Type"
+            sx={{ minWidth: "120px" }}
+            onChange={(e) => setHistoryType(e.target.value as HistorySelectType)}
+          >
+            <MenuItem value={"All"}>All</MenuItem>
+            <MenuItem value={"In progress"}>In progress</MenuItem>
+            <MenuItem value={"Cancelled"}>Cancelled</MenuItem>
+            <MenuItem value={"Resolved"}>Resolved</MenuItem>
+          </Select>
+        </FormControl>
+
+        <LoadingButton
+          variant="contained"
+          onClick={onGetPanics}
+          id="panicHistory"
+          loading={isPending}
+          // sx={{ mt: "4em" }}
+        >
+          Refresh panic list
+        </LoadingButton>
+      </Box>
 
       <PaginatedList setShowModal={setShowModal} />
 
