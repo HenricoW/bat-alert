@@ -1,7 +1,7 @@
 import { baseURL } from "../config";
 import store from "../store/store";
 import type { ApiResponse } from "../types/api.types";
-import type { NewPanic } from "../types/app.types";
+import type { NewPanic, Panic, PanicStatus } from "../types/app.types";
 
 const getUserToken = () => {
   const storeToken = store.getState().user.token_id;
@@ -13,7 +13,7 @@ const getUserToken = () => {
   return storeToken;
 };
 
-export const getPanics = async () => {
+export const getPanics = async (status_id?: PanicStatus) => {
   const userToken = getUserToken();
 
   try {
@@ -21,8 +21,10 @@ export const getPanics = async () => {
       method: "POST",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${userToken}`,
       },
+      body: JSON.stringify(status_id ? { status_id } : {}),
     });
 
     return (await resp.json()) as ApiResponse;
