@@ -6,10 +6,13 @@ dotenv.config();
 const email = process.env.EMAIL || "";
 const password = process.env.PASSWORD || "";
 
-xdescribe("Dashboard page", () => {
+describe("Dashboard page", () => {
   let browser, page;
   beforeAll(async () => {
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+      // headless: false,
+      // slowMo: 35,
+    });
     page = await browser.newPage();
     await page.goto("http://localhost:3000");
     await page.waitForSelector("input[name=email]");
@@ -44,7 +47,7 @@ xdescribe("Dashboard page", () => {
     });
 
     it("Shows modal when clicking on title in panic list", async () => {
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(300);
       await page.click("tbody tr td");
       await page.waitForSelector("h5#panicTitle");
       // await page.screenshot({ path: "capture.png" });
@@ -59,8 +62,52 @@ xdescribe("Dashboard page", () => {
       expect(await page.$("#panicDetail")).toBe(null);
     });
 
-    it.todo("Should show a 'Cancel Panic' button on 'in progress' panics");
-    it.todo("Should NOT show a 'Cancel Panic' button on cancelled panics");
-    it.todo("Should cancel a panic when clicking 'Cancel Panic'");
+    it("Should show a 'Cancel Panic' button on 'in progress' panics", async () => {
+      await page.click("#history-type-select");
+      await page.click("li[data-value='In Progress']");
+      await page.click("button#panicHistory");
+      await page.waitForTimeout(300);
+
+      await page.click("tbody tr td");
+      await page.waitForSelector("h5#panicTitle");
+
+      expect((panicText = await page.$eval("#panicStatus", (el) => el.textContent))).toMatch("In Progress");
+      expect((panicText = await page.$eval("#cancelPanic", (el) => el.textContent))).toMatch("Cancel Panic");
+
+      await page.click("#closeDetail");
+    });
+
+    it("Should NOT show a 'Cancel Panic' button on cancelled panics", async () => {
+      await page.click("#history-type-select");
+      await page.click("li[data-value='Canceled']");
+      await page.waitForTimeout(300);
+      await page.click("button#panicHistory");
+
+      await page.waitForTimeout(500);
+      await page.click("tbody tr td");
+      await page.waitForSelector("h5#panicTitle");
+
+      expect((panicText = await page.$eval("#panicStatus", (el) => el.textContent))).toMatch("Canceled");
+      expect(await page.$("#cancelPanic")).toBe(null);
+
+      await page.click("#closeDetail");
+    });
+
+    xit("Should cancel a panic when clicking 'Cancel Panic'", async () => {
+      await page.waitForTimeout(300);
+      await page.click("#history-type-select");
+      await page.click("li[data-value='In Progress']");
+      await page.waitForTimeout(300);
+      await page.click("button#panicHistory");
+
+      await page.waitForTimeout(500);
+      await page.click("tbody tr td");
+      await page.waitForSelector("h5#panicTitle");
+
+      expect((panicText = await page.$eval("#panicStatus", (el) => el.textContent))).toMatch("In Progress");
+      expect((panicText = await page.$eval("#cancelPanic", (el) => el.textContent))).toMatch("Cancel Panic");
+
+      await page.click("#closeDetail");
+    });
   });
 });
