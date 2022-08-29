@@ -89,8 +89,8 @@ const Dashboard = () => {
       <RaisePanicForm onNewPanic={onNewPanic} />
 
       {panicsMessage && <Alert severity={responseStatus}>{panicsMessage}</Alert>}
-      <LoadingButton variant="contained" onClick={onGetPanics} loading={isPending} sx={{ my: "2em" }}>
-        Get panics
+      <LoadingButton variant="contained" onClick={onGetPanics} loading={isPending} sx={{ mt: "4em" }}>
+        Refresh panic list
       </LoadingButton>
 
       <PaginatedList />
