@@ -55,3 +55,5 @@ export const raisePanic = async (values: NewPanic) => {
     throw Error(error.message.includes("Failed to fetch") ? "You may be offline" : "Error raising panic");
   }
 };
+
+export const reversePanics = (panicList: Panic[]) => [...panicList].reverse();

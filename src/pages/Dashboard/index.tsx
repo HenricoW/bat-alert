@@ -16,7 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 
-import { getPanics, raisePanic } from "../../core/panics.service";
+import { getPanics, raisePanic, reversePanics } from "../../core/panics.service";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import PaginatedList from "../../components/Lists/PaginatedList";
 import { panicActions } from "../../store/slices/panicSlice";
@@ -64,7 +64,8 @@ const Dashboard = () => {
           setResponseStatus("error");
           setPanicsMessage("Could not fetch panics");
         } else {
-          dispatch(panicActions.setPanics(response.data.panics));
+          const revPanics = reversePanics(response.data.panics);
+          dispatch(panicActions.setPanics(revPanics));
         }
       })
       .catch((error) => {
