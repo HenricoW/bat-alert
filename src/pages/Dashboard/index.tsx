@@ -30,19 +30,38 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  const onGetPanics = () => {
+  const resetUIcommunication = () => {
     setIsPending(true);
     setResponseStatus("success");
-    dispatch(panicActions.setPanics([]));
+  };
 
-    getPanics(historyType === "All" ? undefined : PanicStatus[historyType])
+  const onPanic = async (reqType: "fetch" | "raise" | "cancel", data: any) => {
+    let promise: Promise<ApiResponse>;
+    switch (reqType) {
+      case "raise":
+        promise = raisePanic(data);
+        break;
+      case "cancel":
+        promise = cancelPanic(data);
+        break;
+      default:
+        promise = getPanics(historyType === "All" ? undefined : PanicStatus[historyType]);
+    }
+
+    promise
       .then((response) => {
         if (!response.status || response.status === "error") {
           setResponseStatus("error");
-          setPanicsMessage("Could not fetch panics");
+          setPanicsMessage(`Could not ${reqType} panic(s)`);
         } else {
-          const revPanics = reversePanics(response.data.panics);
-          dispatch(panicActions.setPanics(revPanics));
+          if (reqType === "fetch") {
+            const revPanics = reversePanics(response.data.panics);
+            dispatch(panicActions.setPanics(revPanics));
+          } else {
+            setPanicsMessage(response.message);
+            setSnackOpen(true);
+            onGetPanics();
+          }
         }
       })
       .catch((error) => {
@@ -55,9 +74,15 @@ const Dashboard = () => {
       });
   };
 
+  const onGetPanics = () => {
+    resetUIcommunication();
+    dispatch(panicActions.setPanics([]));
+
+    onPanic("fetch", null);
+  };
+
   const onNewPanic = (values: typeof initialPanicValues) => {
-    setIsPending(true);
-    setResponseStatus("success");
+    resetUIcommunication();
     setPanicsMessage("");
 
     const panicData = {
@@ -67,51 +92,14 @@ const Dashboard = () => {
       longitude: values.longitude.toString(),
     };
 
-    raisePanic(panicData)
-      .then((response) => {
-        if (!response.status || response.status === "error") {
-          setResponseStatus("error");
-          setPanicsMessage("Could not raise panic");
-        } else {
-          setPanicsMessage(response.message);
-          setSnackOpen(true);
-          onGetPanics();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setResponseStatus("error");
-        setPanicsMessage(error.message);
-      })
-      .finally(() => {
-        setIsPending(false);
-      });
+    onPanic("raise", panicData);
   };
 
   const onCancelPanic = (panicId: number) => {
-    setIsPending(true);
-    setResponseStatus("success");
+    resetUIcommunication();
     setPanicsMessage("");
 
-    cancelPanic(panicId)
-      .then((response) => {
-        if (!response.status || response.status === "error") {
-          setResponseStatus("error");
-          setPanicsMessage("Could not cancel panic");
-        } else {
-          setPanicsMessage(response.message);
-          setSnackOpen(true);
-          onGetPanics();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setResponseStatus("error");
-        setPanicsMessage(error.message);
-      })
-      .finally(() => {
-        setIsPending(false);
-      });
+    onPanic("cancel", panicId);
   };
 
   useEffect(() => {
