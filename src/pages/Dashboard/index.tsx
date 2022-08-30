@@ -69,14 +69,13 @@ const Dashboard = () => {
 
     raisePanic(panicData)
       .then((response) => {
-        console.log("raise response:", response);
         if (!response.status || response.status === "error") {
           setResponseStatus("error");
           setPanicsMessage("Could not raise panic");
         } else {
-          dispatch(panicActions.addPanic(panicData));
-          setSnackOpen(true);
           setPanicsMessage(response.message);
+          setSnackOpen(true);
+          onGetPanics();
         }
       })
       .catch((error) => {
