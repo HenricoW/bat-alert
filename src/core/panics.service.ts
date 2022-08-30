@@ -73,7 +73,7 @@ export const cancelPanic = async (panicId: number) => {
 
     return (await resp.json()) as ApiResponse;
   } catch (error: any) {
-    console.log("Error raising panic:", error);
+    console.log("Error cancelling panic:", error);
     throw Error(error.message.includes("Failed to fetch") ? "You may be offline" : "Error raising panic");
   }
 };

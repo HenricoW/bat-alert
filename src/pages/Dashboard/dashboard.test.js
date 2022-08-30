@@ -40,7 +40,7 @@ describe("Dashboard page", () => {
 
     let panicText;
     it("Shows panic list button", async () => {
-      expect(await page.$eval("button#panicHistory", (btn) => btn.textContent)).toEqual("Refresh panic list");
+      expect(await page.$eval("button#panicHistory", (btn) => btn.textContent)).toEqual("Refresh history");
       await page.click("button#panicHistory");
       await page.waitForSelector("tbody tr");
       panicText = await page.$eval("tbody tr td", (cell) => cell.textContent);

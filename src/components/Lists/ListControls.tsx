@@ -12,9 +12,9 @@ interface ListControlsProps {
 
 const ListControls = ({ historyType, isPending, onGetPanics, setHistoryType }: ListControlsProps) => {
   return (
-    <Box display="flex" gap="1em" mt="4em">
+    <Box display="flex" gap="1em" mt="3.5em">
       <FormControl>
-        <InputLabel id="history-type-select-label">Panic Type</InputLabel>
+        <InputLabel id="history-type-select-label">History Type</InputLabel>
         <Select
           labelId="history-type-select-label"
           id="history-type-select"
@@ -31,7 +31,7 @@ const ListControls = ({ historyType, isPending, onGetPanics, setHistoryType }: L
       </FormControl>
 
       <LoadingButton variant="contained" onClick={onGetPanics} id="panicHistory" loading={isPending}>
-        Refresh panic list
+        Refresh history
       </LoadingButton>
     </Box>
   );

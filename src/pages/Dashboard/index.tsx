@@ -123,7 +123,11 @@ const Dashboard = () => {
     <Box display="flex" flexDirection="column" alignItems="center" mt="3em">
       <RaisePanicForm onNewPanic={onNewPanic} />
 
-      {panicsMessage && <Alert severity={responseStatus}>{panicsMessage}</Alert>}
+      {responseStatus === "error" && panicsMessage && (
+        <Alert severity={responseStatus} sx={{ mt: "1em" }}>
+          {panicsMessage}
+        </Alert>
+      )}
 
       <ListControls
         historyType={historyType}
