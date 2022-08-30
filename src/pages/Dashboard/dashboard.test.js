@@ -65,8 +65,9 @@ describe("Dashboard page", () => {
     it("Should show a 'Cancel Panic' button on 'in progress' panics", async () => {
       await page.click("#history-type-select");
       await page.click("li[data-value='In Progress']");
+      await page.waitForTimeout(500);
       await page.click("button#panicHistory");
-      await page.waitForTimeout(300);
+      await page.waitForTimeout(500);
 
       await page.click("tbody tr td");
       await page.waitForSelector("h5#panicTitle");
