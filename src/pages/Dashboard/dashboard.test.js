@@ -80,7 +80,7 @@ describe("Dashboard page", () => {
     it("Should NOT show a 'Cancel Panic' button on cancelled panics", async () => {
       await page.click("#history-type-select");
       await page.click("li[data-value='Canceled']");
-      await page.waitForTimeout(300);
+      await page.waitForTimeout(500);
       await page.click("button#panicHistory");
 
       await page.waitForTimeout(500);

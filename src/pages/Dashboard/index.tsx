@@ -33,7 +33,6 @@ const Dashboard = () => {
   const onGetPanics = () => {
     setIsPending(true);
     setResponseStatus("success");
-    setPanicsMessage("");
     dispatch(panicActions.setPanics([]));
 
     getPanics(historyType === "All" ? undefined : PanicStatus[historyType])
@@ -101,8 +100,8 @@ const Dashboard = () => {
           setResponseStatus("error");
           setPanicsMessage("Could not cancel panic");
         } else {
-          setSnackOpen(true);
           setPanicsMessage(response.message);
+          setSnackOpen(true);
           onGetPanics();
         }
       })
