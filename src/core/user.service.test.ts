@@ -1,13 +1,13 @@
 import dotenv from "dotenv-safe";
 import store from "../store/store";
-import { loginRequest } from "./user.service";
+import { loginRequest, logUserOut } from "./user.service";
 
 dotenv.config();
 
 const email = process.env.EMAIL || "";
 const password = process.env.PASSWORD || "";
 
-xdescribe("User service", () => {
+describe("User service", () => {
   describe("Login", () => {
     it("Should NOT save an access token for invalid credentials", async () => {
       const response = await loginRequest("aa@b.c", "laskdjf");
@@ -27,5 +27,12 @@ xdescribe("User service", () => {
     });
 
     // not testing missing fields, will check in UI tests for those error cases
+
+    it("Should clear the access token on log out", async () => {
+      await logUserOut();
+
+      const access_token = store.getState().user.token_id;
+      expect(access_token).toBe("");
+    });
   });
 });

@@ -88,5 +88,16 @@ describe("Dashboard page", () => {
       // look for element only on dashboard page
       expect(await page.$eval("button#panicHistory", (btn) => btn.textContent)).toEqual("Refresh history");
     });
+
+    it("Should sign out", async () => {
+      await page.click("button#logout-btn");
+      await page.click("button[type=submit]");
+
+      await page.waitForSelector("button[type=submit]");
+      // look for element only on dashboard page
+      expect(await page.$eval("button[type=submit]", (btn) => btn.textContent)).toEqual("Sign In");
+      // @ts-ignore
+      expect(await page.$eval("button[type=submit]", (el) => el.disabled)).toBe(true);
+    });
   });
 });

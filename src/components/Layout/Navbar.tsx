@@ -33,7 +33,7 @@ const Navbar = ({ toggleMobileMenu }: NavbarProps) => {
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {userToken && (
               <>
-                <Button variant="contained" color="warning" onClick={logUserOut}>
+                <Button variant="contained" color="warning" id="logout-btn" onClick={logUserOut}>
                   Logout
                 </Button>
               </>
