@@ -74,4 +74,4 @@ const RaisePanicForm = ({ onNewPanic }: RaisePanicFormProps) => {
   );
 };
 
-export default RaisePanicForm;
+export default React.memo(RaisePanicForm);

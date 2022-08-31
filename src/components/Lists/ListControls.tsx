@@ -37,4 +37,4 @@ const ListControls = ({ historyType, isPending, onGetPanics, setHistoryType }: L
   );
 };
 
-export default ListControls;
+export default React.memo(ListControls);

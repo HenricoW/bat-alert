@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Alert, Backdrop, Box, CircularProgress, Snackbar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { PanicStatus } from "../../types/app.types";
-import { cancelPanic, getPanics, raisePanic, reversePanics } from "../../core/panics.service";
+import { cancelPanic, getPanics, raisePanic } from "../../core/panics.service";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { panicActions } from "../../store/slices/panicSlice";
 import type { ApiResponse } from "../../types/api.types";
@@ -73,14 +73,14 @@ const Dashboard = () => {
       });
   };
 
-  const onGetPanics = () => {
+  const onGetPanics = useCallback(() => {
     resetUIcommunication();
     dispatch(panicActions.setPanics([]));
 
     onPanic("fetch", null);
-  };
+  }, [historyType]);
 
-  const onNewPanic = (values: typeof initialPanicValues) => {
+  const onNewPanic = useCallback((values: typeof initialPanicValues) => {
     resetUIcommunication();
     setPanicsMessage("");
 
@@ -92,7 +92,7 @@ const Dashboard = () => {
     };
 
     onPanic("raise", panicData);
-  };
+  }, []);
 
   const onCancelPanic = (panicId: number) => {
     resetUIcommunication();

@@ -100,4 +100,4 @@ const PaginatedList = ({ setShowModal }: PaginatedListProps) => {
   );
 };
 
-export default PaginatedList;
+export default React.memo(PaginatedList);
