@@ -35,64 +35,71 @@ const Dashboard = () => {
     setResponseStatus("success");
   };
 
-  const onPanic = async (reqType: "fetch" | "raise" | "cancel", data: any) => {
-    let promise: Promise<ApiResponse>;
-    switch (reqType) {
-      case "raise":
-        promise = raisePanic(data);
-        break;
-      case "cancel":
-        promise = cancelPanic(data);
-        break;
-      default:
-        promise = getPanics(historyType === "All" ? undefined : PanicStatus[historyType]);
-    }
+  const onPanic = useCallback(
+    async (reqType: "fetch" | "raise" | "cancel", data: any) => {
+      let promise: Promise<ApiResponse>;
+      switch (reqType) {
+        case "raise":
+          promise = raisePanic(data);
+          break;
+        case "cancel":
+          promise = cancelPanic(data);
+          break;
+        default:
+          promise = getPanics(historyType === "All" ? undefined : PanicStatus[historyType]);
+      }
 
-    promise
-      .then((response) => {
-        if (!response.status || response.status === "error") {
-          setResponseStatus("error");
-          setPanicsMessage(`Could not ${reqType} panic(s)`);
-        } else {
-          if (reqType === "fetch") {
-            dispatch(panicActions.setPanics(response.data.panics));
+      promise
+        .then((response) => {
+          if (!response.status || response.status === "error") {
+            setResponseStatus("error");
+            setPanicsMessage(`Could not ${reqType} panic(s)`);
           } else {
-            setPanicsMessage(response.message);
-            setSnackOpen(true);
-            onGetPanics();
+            if (reqType === "fetch") {
+              dispatch(panicActions.setPanics(response.data.panics));
+            } else {
+              setPanicsMessage(response.message);
+              setSnackOpen(true);
+              onGetPanics();
+            }
           }
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setResponseStatus("error");
-        setPanicsMessage(error.message);
-      })
-      .finally(() => {
-        setIsPending(false);
-      });
-  };
+        })
+        .catch((error) => {
+          console.log(error);
+          setResponseStatus("error");
+          setPanicsMessage(error.message);
+        })
+        .finally(() => {
+          setIsPending(false);
+        });
+    },
+    // eslint-disable-next-line
+    [historyType, dispatch]
+  );
 
   const onGetPanics = useCallback(() => {
     resetUIcommunication();
     dispatch(panicActions.setPanics([]));
 
     onPanic("fetch", null);
-  }, [historyType]);
+  }, [dispatch, onPanic]);
 
-  const onNewPanic = useCallback((values: typeof initialPanicValues) => {
-    resetUIcommunication();
-    setPanicsMessage("");
+  const onNewPanic = useCallback(
+    (values: typeof initialPanicValues) => {
+      resetUIcommunication();
+      setPanicsMessage("");
 
-    const panicData = {
-      panic_type: values.panicType,
-      details: values.details,
-      latitude: values.latitude.toString(),
-      longitude: values.longitude.toString(),
-    };
+      const panicData = {
+        panic_type: values.panicType,
+        details: values.details,
+        latitude: values.latitude.toString(),
+        longitude: values.longitude.toString(),
+      };
 
-    onPanic("raise", panicData);
-  }, []);
+      onPanic("raise", panicData);
+    },
+    [onPanic]
+  );
 
   const onCancelPanic = (panicId: number) => {
     resetUIcommunication();
@@ -103,7 +110,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!userToken) navigate("/");
-  }, [userToken]);
+  }, [userToken, navigate]);
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" mt="3em">
