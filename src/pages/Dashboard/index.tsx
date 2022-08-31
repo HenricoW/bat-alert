@@ -55,8 +55,7 @@ const Dashboard = () => {
           setPanicsMessage(`Could not ${reqType} panic(s)`);
         } else {
           if (reqType === "fetch") {
-            const revPanics = reversePanics(response.data.panics);
-            dispatch(panicActions.setPanics(revPanics));
+            dispatch(panicActions.setPanics(response.data.panics));
           } else {
             setPanicsMessage(response.message);
             setSnackOpen(true);
